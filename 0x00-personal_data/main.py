@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main file
+Main file for logging and PII fields
 """
 
 import logging

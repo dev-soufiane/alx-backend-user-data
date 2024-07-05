@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-Encrypting and Checking valid password
+Password encryption and validation
 """
 import bcrypt
 
 
 def hash_password(password: str) -> bytes:
     """
-    Hashes the provided password using bcrypt.
+    Encrypt password using bcrypt.
     Args:
-        password: The password to hash.
+        password: Password to encrypt.
     Returns:
-        The hashed password as a byte string.
+        Encrypted password as bytes.
     """
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode(), salt)
@@ -20,11 +20,11 @@ def hash_password(password: str) -> bytes:
 
 def is_valid(hashed_password: bytes, password: str) -> bool:
     """
-    Validates if the provided password matches the hashed password.
+    Check if password matches hashed version.
     Args:
-        hashed_password: The hashed password as a byte string.
-        password: The password to check.
+        hashed_password: Encrypted password (bytes).
+        password: Password to verify.
     Returns:
-        True - password matches the hashed password, otherwise False
+        True if password matches, else False.
     """
     return bcrypt.checkpw(password.encode(), hashed_password)

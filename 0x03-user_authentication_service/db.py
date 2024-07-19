@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Database module for SQLAlchemy interactions."""
+"""DB module
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import Session
@@ -10,10 +11,10 @@ from user import Base, User
 
 
 class DB:
-    """Class for managing database operations."""
+    """DB class for interacting with the database"""
 
     def __init__(self) -> None:
-        """Initialize a new DB instance."""
+        """Initialize a new DB instance"""
         self._engine = create_engine("sqlite:///a.db")
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
@@ -21,7 +22,7 @@ class DB:
 
     @property
     def _session(self) -> Session:
-        """Memoized session object."""
+        """Memoized session object"""
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
@@ -29,14 +30,12 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """
-        Add a new user to the database.
-
+        Add a new user to the database
         Args:
-            email: Email of the user.
-            hashed_password: Hashed password of the user.
-
+            email: Email of the user
+            hashed_password: Hashed password of the user
         Returns:
-            User: User object representing the newly added user.
+            User: User object representing the newly added user
         """
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
@@ -45,17 +44,14 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """
-        Find a user in the database based on the provided arguments.
-
+        Find a user in the database based on the provided arguments
         Args:
-            **kwargs: Keyword arguments to filter the user query.
-
+            **kwargs: keyword arguments to filter the user query
         Returns:
-            User: User object representing the found user.
-
+            User: User object representing the found user
         Raises:
-            NoResultFound: If no user is found.
-            InvalidRequestError: If an invalid query argument is used.
+            NoResultFound: If no user is found
+            InvalidRequestError: If an invalid query argument is used
         """
         try:
             user = self._session.query(User).filter_by(**kwargs).one()
@@ -67,17 +63,13 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
-        Update a user's attributes in the database based on user_id.
-
+        Update a user's attributes in the database based on user_id
         Args:
-            user_id: ID of the user to be updated.
-            **kwargs: Keyword arguments for user attribute updates.
-
+            user_id: ID of the user to be updated
+            **kwargs: Keyword arguments for user attribute updates
         Raises:
-            ValueError: If an invalid attribute is provided.
-
-        Returns:
-            None
+            ValueError: If an invalid attribute is provided
+        Returns: None
         """
         user: User = self.find_user_by(id=user_id)
         for key in kwargs:
